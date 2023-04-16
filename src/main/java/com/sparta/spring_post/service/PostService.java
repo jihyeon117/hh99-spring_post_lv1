@@ -15,29 +15,42 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    @Transactional
-    public Post createPost(PostDto postDto) {
-        Post post = new Post(postDto);
-        return postRepository.save(post);
-    }
-
     @Transactional(readOnly = true)
     public List<Post> getAllPosts() {
         return postRepository.findAllByOrderByModifiedAtDesc();
     }
 
     @Transactional
-    public Post update(Long id, PostDto postDto) {
-        Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("아이디를 찾을 수 없습니다.")
-        );
+    public Post getPost(Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        post.getClass();
+        return post;
+    }
+
+    @Transactional
+    public Post createPost(PostDto postDto) {
+        Post post = new Post(postDto);
+        return postRepository.save(post);
+    }
+
+    @Transactional
+    public Post updatePost(Long id, PostDto postDto) {
+        Post post = postRepository.findById(id).orElseThrow();
+        if(!post.getPassword().equals(postDto.getPassword())) {
+            return post;
+        }
         post.update(postDto);
         return post;
     }
 
     @Transactional
-    public Long deletePost(Long id) {
+    public String deletePost(Long id, PostDto postDto) {
+        Post post = postRepository.findById(id).orElseThrow();
+        if(!post.getPassword().equals(postDto.getPassword())) {
+            return "비밀번호가 일치하지 않습니다.";
+        }
         postRepository.deleteById(id);
-        return id;
+        return "성공적으로 삭제되었습니다.";
     }
+
 }
