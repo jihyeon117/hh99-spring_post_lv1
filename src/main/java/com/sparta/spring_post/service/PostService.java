@@ -26,4 +26,18 @@ public class PostService {
         return postRepository.findAllByOrderByModifiedAtDesc();
     }
 
+    @Transactional
+    public Post update(Long id, PostDto postDto) {
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("아이디를 찾을 수 없습니다.")
+        );
+        post.update(postDto);
+        return post;
+    }
+
+    @Transactional
+    public Long deletePost(Long id) {
+        postRepository.deleteById(id);
+        return id;
+    }
 }
