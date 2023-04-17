@@ -1,7 +1,8 @@
 package com.sparta.spring_post.entity;
 
-import com.sparta.spring_post.dto.PostDto;
+import com.sparta.spring_post.dto.PostRequestDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,17 +26,18 @@ public class Post extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    public Post(PostDto postDto) {
-        this.author = postDto.getAuthor();
-        this.password = postDto.getPassword();
-        this.title = postDto.getTitle();
-        this.content = postDto.getContent();
+    @Builder
+    public Post(String author, String password, String title, String content) {
+        this.author = author;
+        this.password = password;
+        this.title = title;
+        this.content = content;
     }
 
-    public void update(PostDto postDto) {
-        this.author = postDto.getAuthor();
-        this.password = postDto.getPassword();
-        this.title = postDto.getTitle();
-        this.content = postDto.getContent();
+    public void update(PostRequestDto postRequestDto) {
+        this.author = postRequestDto.getAuthor();
+        this.password = postRequestDto.getPassword();
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
     }
 }

@@ -1,52 +1,63 @@
 package com.sparta.spring_post.service;
 
-import com.sparta.spring_post.dto.PostDto;
+import com.sparta.spring_post.dto.PostRequestDto;
+import com.sparta.spring_post.dto.PostResponseDto;
 import com.sparta.spring_post.entity.Post;
 import com.sparta.spring_post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
+    @Autowired
     private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
-    public List<Post> getAllPosts() {
-        return postRepository.findAllByOrderByModifiedAtDesc();
-    }
-
-    @Transactional
-    public Post getPost(Long id) {
-        Post post = postRepository.findById(id).orElseThrow();
-        post.getClass();
-        return post;
-    }
-
-    @Transactional
-    public Post createPost(PostDto postDto) {
-        Post post = new Post(postDto);
-        return postRepository.save(post);
-    }
-
-    @Transactional
-    public Post updatePost(Long id, PostDto postDto) {
-        Post post = postRepository.findById(id).orElseThrow();
-        if(!post.getPassword().equals(postDto.getPassword())) {
-            return post;
+    public List<PostResponseDto> getAllPosts() {
+        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
+        List<PostResponseDto> dtos = new ArrayList<>();
+        for (Post post : posts) {
+            dtos.add(new PostResponseDto(post));
         }
-        post.update(postDto);
-        return post;
+        return dtos;
+    }
+
+    @Transactional(readOnly = true)
+    public PostResponseDto getPost(Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        PostResponseDto dtos = new PostResponseDto(post);
+        dtos.getClass();
+        return dtos;
     }
 
     @Transactional
-    public String deletePost(Long id, PostDto postDto) {
+    public PostResponseDto createPost(PostRequestDto postRequestDto) {
+        Post post = postRepository.save(postRequestDto.toEntity());
+        return new  PostResponseDto(post);
+    }
+
+    @Transactional
+    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto) {
         Post post = postRepository.findById(id).orElseThrow();
-        if(!post.getPassword().equals(postDto.getPassword())) {
+        PostResponseDto dtos = new PostResponseDto(post);
+        if (!post.getPassword().equals(postRequestDto.getPassword())) {
+            return dtos;
+        }
+        post.update(postRequestDto);
+        return new PostResponseDto(post);
+    }
+
+    @Transactional
+    public String deletePost(Long id, String password) {
+        Post post = postRepository.findById(id).orElseThrow();
+        if (!post.getPassword().equals(password)) {
             return "비밀번호가 일치하지 않습니다.";
         }
         postRepository.deleteById(id);
