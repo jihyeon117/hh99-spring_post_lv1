@@ -1,3 +1,4 @@
+// Client <-Dto-> Controller <-Dto-> Service <-Dto-> Repository <-Entity-> DB
 package com.sparta.spring_post.controller;
 
 import com.sparta.spring_post.dto.PostRequestDto;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
+    // PostService 연결
     private final PostService postService;
 
     // 목록 조회

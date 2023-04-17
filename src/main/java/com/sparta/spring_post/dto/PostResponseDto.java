@@ -1,3 +1,4 @@
+// Client <-Dto-> Controller <-Dto-> Service <-Dto-> Repository <-Entity-> DB
 package com.sparta.spring_post.dto;
 
 import com.sparta.spring_post.entity.Post;

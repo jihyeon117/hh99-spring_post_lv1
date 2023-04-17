@@ -1,5 +1,7 @@
+// Client <-Dto-> Controller <-Dto-> Service <-Dto-> Repository <-Entity-> DB
 package com.sparta.spring_post.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.spring_post.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -18,6 +20,7 @@ public class Post extends Timestamped {
     private String author;
 
     @Column(nullable = false)
+    @JsonIgnore // 데이터를 주고받을 때, 해당 데이터 ignore. 응답값 보이지 않음
     private String password;
 
     @Column(nullable = false)

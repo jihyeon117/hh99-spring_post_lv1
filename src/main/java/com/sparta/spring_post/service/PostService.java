@@ -1,3 +1,4 @@
+// Client <-Dto-> Controller <-Dto-> Service <-Dto-> Repository <-Entity-> DB
 package com.sparta.spring_post.service;
 
 import com.sparta.spring_post.dto.PostRequestDto;
@@ -5,7 +6,6 @@ import com.sparta.spring_post.dto.PostResponseDto;
 import com.sparta.spring_post.entity.Post;
 import com.sparta.spring_post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +16,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
 
-    @Autowired
+    // PostRepository 연결
     private final PostRepository postRepository;
 
+    // 목록 조회
     @Transactional(readOnly = true)
     public List<PostResponseDto> getAllPosts() {
         List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
@@ -29,6 +30,7 @@ public class PostService {
         return dtos;
     }
 
+    // 상세 조회
     @Transactional(readOnly = true)
     public PostResponseDto getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow();
@@ -37,12 +39,14 @@ public class PostService {
         return dtos;
     }
 
+    // 추가
     @Transactional
     public PostResponseDto createPost(PostRequestDto postRequestDto) {
         Post post = postRepository.save(postRequestDto.toEntity());
         return new  PostResponseDto(post);
     }
 
+    // 수정
     @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto) {
         Post post = postRepository.findById(id).orElseThrow();
@@ -54,6 +58,7 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
+    // 삭제
     @Transactional
     public String deletePost(Long id, String password) {
         Post post = postRepository.findById(id).orElseThrow();
