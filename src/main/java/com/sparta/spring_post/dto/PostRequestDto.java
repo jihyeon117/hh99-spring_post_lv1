@@ -21,7 +21,7 @@ public class PostRequestDto {       // 클라이언트와 서버 간에 데이�
     private String title;
     private String content;
 
-    public Post toEntity() {    // toEntity() : PostRequestDto 객체를 Post Entity 객체로 변환하는데 사용됨
+    public Post toEntity() {    // toEntity() : PostRequestDto 객체를 Post Entity 객체로 변환하는데 사용됨 ( 사용자 지정 메서드 )
         return Post.builder()
                 // builder() : Post 객체의 새 인스턴스를 생성하고 PostRequestDto 객체의 값으로 속성을 설정함
                 .author(author)
